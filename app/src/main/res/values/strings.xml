@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ImageApp</string>
+    <!-- Text -->
+    <string name="text_no_image">No image selected</string>
+    <!-- Button -->
+    <string name="button_open_new_image">CAPTURE NEW IMAGE</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+</resources>
