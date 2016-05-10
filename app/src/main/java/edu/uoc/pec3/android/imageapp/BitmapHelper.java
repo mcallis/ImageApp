@@ -15,7 +15,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -67,13 +69,33 @@ public class BitmapHelper {
         return  "/imageapp.jpg";
     }
 
+    public Bitmap getBitmap(Intent data) {
+
+        /*
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        assert thumbnail != null;
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File destination = imageFile();
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
+        return thumbnail;
+    }
+
 
 
     public void galleryAddPic() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        values.put(MediaStore.MediaColumns.DATA, getFile().getAbsolutePath());
+        values.put(MediaStore.MediaColumns.DATA, galleryGetPic().getAbsolutePath());
         mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
         Toast.makeText(mContext, "Image saved!", Toast.LENGTH_LONG).show();
@@ -105,7 +127,7 @@ public class BitmapHelper {
         void success();
     }
 
-    private void refreshGallery() {
+    public void refreshGallery() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
             mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
                     Uri.parse("file://" + Environment.getExternalStorageState())));
