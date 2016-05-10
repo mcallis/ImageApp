@@ -30,6 +30,8 @@ public class Camera {
     public void dispatchTakePictureIntent(BitmapHelper bitmapHelper) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.mContext.getPackageManager()) != null) {
+            ((Activity)this.mContext).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            /*
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -45,6 +47,7 @@ public class Camera {
                         Uri.fromFile(photoFile));
                 ((Activity)this.mContext).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
+            */
         }
     }
 
