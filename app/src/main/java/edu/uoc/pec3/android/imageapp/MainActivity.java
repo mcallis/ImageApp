@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.DialogPreference;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +23,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showImage() {
+        mBitmapHelper.refreshGallery();
         File storedImage = mBitmapHelper.galleryGetPic();
         if (storedImage.exists()){
             //"file:" + mFile.getAbsolutePath();
@@ -88,11 +93,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            mImageView.setImageURI(null);
-            mImageView.setImageURI(Uri.fromFile(mBitmapHelper.getFile()));
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            mImageView.setImageBitmap(bitmap);
             mTextView.setVisibility(View.GONE);
         }
     }
+
+
 
 
     @Override
