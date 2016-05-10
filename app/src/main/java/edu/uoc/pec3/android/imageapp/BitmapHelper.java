@@ -55,13 +55,6 @@ public class BitmapHelper {
         }
         FileOutputStream fo;
         try {
-            /*
-            boolean created = mFile.createNewFile();
-            if (created){
-                Log.d(TAG, "File created");
-            } else {
-                Log.d(TAG, "File already exists");
-            }*/
             fo = new FileOutputStream(mFile);
             fo.write(bytes.toByteArray());
             fo.close();
@@ -90,15 +83,7 @@ public class BitmapHelper {
     public void galleryAddPic() {
         if (thumbnailExist){
             newImageFile();
-/*
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.MediaColumns.DATA, mFile.getAbsolutePath());
-            mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-*/
             Toast.makeText(mContext, "Image saved!", Toast.LENGTH_LONG).show();
-
             refreshGallery();
         }
     }

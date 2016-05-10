@@ -27,27 +27,10 @@ public class Camera {
     }
 
 
-    public void dispatchTakePictureIntent(BitmapHelper bitmapHelper) {
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.mContext.getPackageManager()) != null) {
             ((Activity)this.mContext).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            /*
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = bitmapHelper.createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                mLogger.e("Error occurred while creating the File");
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                mLogger.d("Take a picture");
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                ((Activity)this.mContext).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-            */
         }
     }
 

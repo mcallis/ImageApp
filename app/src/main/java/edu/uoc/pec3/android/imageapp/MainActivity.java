@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == mButtonOpenImage) {
             // launching an intent to get an image from camera
-            mCamera.dispatchTakePictureIntent(mBitmapHelper);
+            mCamera.dispatchTakePictureIntent();
         }
     }
 
