@@ -37,27 +37,44 @@ public class BitmapHelper {
     private String mCurrentPhotoPath;
     private Logger mLogger;
     private File mFile;
+    private Bitmap thumbnail = null;
 
     public BitmapHelper(Context context){
         this.mContext = context;
         this.mLogger = new Logger(TAG);
     }
 
-    public File createImageFile() throws IOException {
-        mFile = imageFile();
+    public void createImageFile() {
+        mFile = newImageFile();
         if (mFile.exists()){
             mFile.delete();
         }
 
 
+
+        /*
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + mFile.getAbsolutePath();
         mLogger.i("File has been created to " + mCurrentPhotoPath);
         return mFile;
+        */
     }
 
-    private File imageFile() {
-        return new File(getDirPath() + File.separator + getImageFileName());
+    private File newImageFile() {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File destination = new File(getDirPath() + File.separator + getImageFileName());
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //return new File(getDirPath() + File.separator + getImageFileName());
+        return destination;
     }
 
 
@@ -69,44 +86,27 @@ public class BitmapHelper {
         return  "/imageapp.jpg";
     }
 
-    public Bitmap getBitmap(Intent data) {
-
-        /*
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        assert thumbnail != null;
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = imageFile();
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-        return thumbnail;
+    public void setThumbnail(Bitmap bitmap) {
+        this.thumbnail = bitmap;
     }
 
 
 
     public void galleryAddPic() {
+        /*
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         values.put(MediaStore.MediaColumns.DATA, galleryGetPic().getAbsolutePath());
         mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+*/
+        createImageFile();
 
         Toast.makeText(mContext, "Image saved!", Toast.LENGTH_LONG).show();
 
         refreshGallery();
     }
-
-
-    public File getFile(){
-        return mFile;
-    }
+    
 
     public void galleryDeletePic(CallbackDelete callback){
         File fdelete = galleryGetPic();
