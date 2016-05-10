@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showImage() {
         mBitmapHelper.refreshGallery();
-        File storedImage = mBitmapHelper.galleryGetPic();
+        File storedImage = mBitmapHelper.getFile();
         if (storedImage.exists()){
             //"file:" + mFile.getAbsolutePath();
             mImageView.setImageURI(Uri.fromFile(storedImage));
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             mImageView.setImageBitmap(bitmap);
             mTextView.setVisibility(View.GONE);
+            mBitmapHelper.setThumbnail(bitmap);
         }
     }
 
@@ -133,7 +134,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mBitmapHelper.galleryAddPic();
                 break;
             case R.id.delete:
-                showAlert();
+                if (mBitmapHelper.getFile().exists()){
+                    showAlert();
+                }
                 break;
             default:
                 break;
