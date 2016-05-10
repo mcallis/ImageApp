@@ -38,43 +38,36 @@ public class BitmapHelper {
     private Logger mLogger;
     private File mFile;
     private Bitmap thumbnail = null;
+    public boolean thumbnailExist = false;
 
     public BitmapHelper(Context context){
         this.mContext = context;
         this.mLogger = new Logger(TAG);
     }
 
-    public void createImageFile() {
-        mFile = newImageFile();
+
+    private void newImageFile() {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        mFile = getFile();
         if (mFile.exists()){
             mFile.delete();
         }
-
-
-
-        /*
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + mFile.getAbsolutePath();
-        mLogger.i("File has been created to " + mCurrentPhotoPath);
-        return mFile;
-        */
-    }
-
-    private File newImageFile() {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(getDirPath() + File.separator + getImageFileName());
         FileOutputStream fo;
         try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
+            /*
+            boolean created = mFile.createNewFile();
+            if (created){
+                Log.d(TAG, "File created");
+            } else {
+                Log.d(TAG, "File already exists");
+            }*/
+            fo = new FileOutputStream(mFile);
             fo.write(bytes.toByteArray());
             fo.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //return new File(getDirPath() + File.separator + getImageFileName());
-        return destination;
     }
 
 
@@ -88,32 +81,36 @@ public class BitmapHelper {
 
     public void setThumbnail(Bitmap bitmap) {
         this.thumbnail = bitmap;
+        this.thumbnailExist = true;
     }
+
 
 
 
     public void galleryAddPic() {
-        /*
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        values.put(MediaStore.MediaColumns.DATA, galleryGetPic().getAbsolutePath());
-        mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if (thumbnailExist){
+            newImageFile();
+/*
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.MediaColumns.DATA, mFile.getAbsolutePath());
+            mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 */
-        createImageFile();
+            Toast.makeText(mContext, "Image saved!", Toast.LENGTH_LONG).show();
 
-        Toast.makeText(mContext, "Image saved!", Toast.LENGTH_LONG).show();
-
-        refreshGallery();
+            refreshGallery();
+        }
     }
-    
+
 
     public void galleryDeletePic(CallbackDelete callback){
-        File fdelete = galleryGetPic();
+        File fdelete = getFile();
         if (fdelete.exists()) {
             if (fdelete.delete()) {
                 mLogger.i("file Deleted :" + fdelete.getAbsolutePath());
                 refreshGallery();
+                this.thumbnailExist = false;
                 if (callback != null){
                     callback.success();
                 }
@@ -145,8 +142,8 @@ public class BitmapHelper {
         }
     }
 
-    public File galleryGetPic(){
-        return imageFile();
+    public File getFile(){
+        return new File(getDirPath(), getImageFileName());
     }
 
 }
