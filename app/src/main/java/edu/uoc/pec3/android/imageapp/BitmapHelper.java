@@ -34,7 +34,6 @@ public class BitmapHelper {
     private static final String TAG = BitmapHelper.class.getSimpleName();
     private static final String DIRECTORY_PICTURES = "UOCImageApp";
     private Context mContext;
-    private String mCurrentPhotoPath;
     private Logger mLogger;
     private File mFile;
     private Bitmap thumbnail = null;
@@ -46,9 +45,12 @@ public class BitmapHelper {
     }
 
 
+    /**
+     * Method to create a file by image
+     */
     private void newImageFile() {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 300, bytes);
         mFile = getFile();
         if (mFile.exists()){
             mFile.delete();
@@ -63,23 +65,35 @@ public class BitmapHelper {
         }
     }
 
-
+    /**
+     * Method to define dir
+     * @return File
+     */
     public File getDirPath(){
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES);
     }
 
+    /**
+     * Method to define file name
+     * @return String
+     */
     public String getImageFileName(){
         return  "/imageapp.jpg";
     }
 
+    /**
+     * Method to set thumbnail and define boolean
+     * @param bitmap
+     */
     public void setThumbnail(Bitmap bitmap) {
         this.thumbnail = bitmap;
         this.thumbnailExist = true;
     }
 
 
-
-
+    /**
+     * Method to add pic to device gallery
+     */
     public void galleryAddPic() {
         if (thumbnailExist){
             newImageFile();
@@ -88,7 +102,10 @@ public class BitmapHelper {
         }
     }
 
-
+    /**
+     * Method to delete image of gallery
+     * @param callback
+     */
     public void galleryDeletePic(CallbackDelete callback){
         File fdelete = getFile();
         if (fdelete.exists()) {
@@ -109,6 +126,9 @@ public class BitmapHelper {
         void success();
     }
 
+    /**
+     * Method to refresh gallery
+     */
     public void refreshGallery() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
             mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,

@@ -55,13 +55,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Create Bitmap Manager instance
         mBitmapHelper = new BitmapHelper(this);
+        // Create Camera instance
         mCamera = new Camera(this);
 
+        // Show image if exists
         showImage();
 
         // Set listeners
         mButtonOpenImage.setOnClickListener(this);
 
+        // Check permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             mButtonOpenImage.setEnabled(false);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -70,14 +73,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showImage() {
         mBitmapHelper.refreshGallery();
+        // Get File
         File storedImage = mBitmapHelper.getFile();
+        // Check if file exists
         if (storedImage.exists()){
-            //"file:" + mFile.getAbsolutePath();
+            // Set image
             mImageView.setImageURI(Uri.fromFile(storedImage));
+            // Set Visibilities
             mImageView.setVisibility(View.VISIBLE);
             mTextView.setVisibility(View.GONE);
         } else {
+            // Delete image
             mImageView.setImageURI(null);
+            // Set Visibilities
             mImageView.setVisibility(View.GONE);
             mTextView.setVisibility(View.VISIBLE);
         }
@@ -95,9 +103,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            // Get bitmap
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            // Set Visibilities
             mImageView.setVisibility(View.VISIBLE);
             mTextView.setVisibility(View.GONE);
+            // Set images
             mImageView.setImageBitmap(bitmap);
             mBitmapHelper.setThumbnail(bitmap);
         }
@@ -134,9 +145,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
         switch (id){
             case R.id.save:
+                // Add pic
                 mBitmapHelper.galleryAddPic();
                 break;
             case R.id.delete:
+                // Check if file exists
                 if (mBitmapHelper.getFile().exists()){
                     showAlert();
                 }
