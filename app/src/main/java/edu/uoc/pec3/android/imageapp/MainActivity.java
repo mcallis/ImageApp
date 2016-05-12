@@ -74,9 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (storedImage.exists()){
             //"file:" + mFile.getAbsolutePath();
             mImageView.setImageURI(Uri.fromFile(storedImage));
+            mImageView.setVisibility(View.VISIBLE);
             mTextView.setVisibility(View.GONE);
         } else {
             mImageView.setImageURI(null);
+            mImageView.setVisibility(View.GONE);
             mTextView.setVisibility(View.VISIBLE);
         }
     }
@@ -94,8 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            mImageView.setImageBitmap(bitmap);
+            mImageView.setVisibility(View.VISIBLE);
             mTextView.setVisibility(View.GONE);
+            mImageView.setImageBitmap(bitmap);
             mBitmapHelper.setThumbnail(bitmap);
         }
     }
