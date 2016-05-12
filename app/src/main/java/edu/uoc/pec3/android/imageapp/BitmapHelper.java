@@ -50,7 +50,7 @@ public class BitmapHelper {
      */
     private void newImageFile() {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 300, bytes);
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         mFile = getFile();
         if (mFile.exists()){
             mFile.delete();
